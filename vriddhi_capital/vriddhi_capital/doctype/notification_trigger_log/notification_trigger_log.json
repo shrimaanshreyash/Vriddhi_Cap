@@ -1,0 +1,44 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-06-18 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "event_type",
+  "channel",
+  "reference_doctype",
+  "reference_name",
+  "recipient",
+  "status",
+  "provider_response",
+  "payload"
+ ],
+ "fields": [
+  {"fieldname": "event_type", "fieldtype": "Select", "in_list_view": 1, "label": "Event Type", "options": "Invoice Generated\nInvoice Delivery\nPayment Reminder\nStatus Change\nWelcome"},
+  {"fieldname": "channel", "fieldtype": "Select", "in_list_view": 1, "label": "Channel", "options": "System\nEmail\nTelegram\nWhatsApp"},
+  {"fieldname": "reference_doctype", "fieldtype": "Data", "in_list_view": 1, "label": "Reference DocType"},
+  {"fieldname": "reference_name", "fieldtype": "Dynamic Link", "in_list_view": 1, "label": "Reference", "options": "reference_doctype"},
+  {"fieldname": "recipient", "fieldtype": "Data", "in_list_view": 1, "label": "Recipient"},
+  {"fieldname": "status", "fieldtype": "Select", "in_list_view": 1, "label": "Status", "options": "Queued\nSent\nFailed\nSimulated"},
+  {"fieldname": "provider_response", "fieldtype": "Small Text", "label": "Provider Response"},
+  {"fieldname": "payload", "fieldtype": "Code", "label": "Payload"}
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-06-18 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Vriddhi Capital",
+ "name": "Notification Trigger Log",
+ "owner": "Administrator",
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"create": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Founder", "share": 1, "write": 1},
+  {"create": 1, "email": 1, "export": 1, "print": 1, "read": 1, "report": 1, "role": "Accountant", "share": 1, "write": 1},
+  {"export": 1, "print": 1, "read": 1, "report": 1, "role": "Finance Viewer"}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

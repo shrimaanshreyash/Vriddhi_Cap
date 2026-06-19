@@ -1,0 +1,44 @@
+{
+ "actions": [],
+ "allow_rename": 0,
+ "creation": "2026-06-18 00:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "enable_live_email",
+  "enable_live_telegram",
+  "fallback_to_simulated_log",
+  "telegram_bot_token",
+  "telegram_default_chat_id",
+  "reminder_days",
+  "invoice_email_subject",
+  "reminder_email_subject"
+ ],
+ "fields": [
+  {"default": "1", "fieldname": "enable_live_email", "fieldtype": "Check", "label": "Enable Live Email"},
+  {"default": "1", "fieldname": "enable_live_telegram", "fieldtype": "Check", "label": "Enable Live Telegram"},
+  {"default": "1", "fieldname": "fallback_to_simulated_log", "fieldtype": "Check", "label": "Fallback to Simulated Log"},
+  {"fieldname": "telegram_bot_token", "fieldtype": "Password", "label": "Telegram Bot Token"},
+  {"fieldname": "telegram_default_chat_id", "fieldtype": "Data", "label": "Default Telegram Chat ID"},
+  {"default": "0,3,7,15", "fieldname": "reminder_days", "fieldtype": "Data", "label": "Reminder Days"},
+  {"default": "GST invoice {invoice_name} from Vriddhi Capital", "fieldname": "invoice_email_subject", "fieldtype": "Data", "label": "Invoice Email Subject"},
+  {"default": "Payment reminder for invoice {invoice_name}", "fieldname": "reminder_email_subject", "fieldtype": "Data", "label": "Reminder Email Subject"}
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-06-18 00:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "Vriddhi Capital",
+ "name": "Vriddhi Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {"create": 1, "delete": 1, "email": 1, "print": 1, "read": 1, "role": "System Manager", "share": 1, "write": 1},
+  {"create": 1, "email": 1, "print": 1, "read": 1, "role": "Founder", "share": 1, "write": 1},
+  {"email": 1, "print": 1, "read": 1, "role": "Accountant", "share": 1, "write": 1}
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

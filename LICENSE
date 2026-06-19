@@ -1,0 +1,11 @@
+Copyright (c) 2026 Vriddhi Capital Team
+
+This repository contains the Vriddhi Capital custom product layer for a
+Frappe/ERPNext-based deployment. It does not remove, replace, or supersede
+license obligations for Frappe, ERPNext, India Compliance, MariaDB, Redis,
+Apache ECharts, or any other upstream dependency used by the deployed stack.
+
+Permission is granted to the hackathon organisers and judges to view, run, and
+evaluate this submission repository for the purpose of judging the Vriddhi
+Capital project.
+

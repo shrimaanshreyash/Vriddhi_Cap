@@ -1,0 +1,1064 @@
+.vriddhi-dashboard {
+	background: #f4f7f6;
+	color: #0f172a;
+	margin: -15px;
+	min-height: calc(100vh - 60px);
+	padding: 0 0 32px;
+}
+
+.vriddhi-locked-shell .page-container,
+.vriddhi-locked-shell .container,
+.vriddhi-locked-shell .container-xl,
+.vriddhi-locked-shell .layout-main-section {
+	max-width: none !important;
+	width: 100% !important;
+}
+
+.vriddhi-hero {
+	background:
+		linear-gradient(120deg, rgba(15, 118, 110, 0.12), rgba(37, 99, 235, 0.08)),
+		#ffffff;
+	border-bottom: 1px solid #dde7e4;
+	padding: 24px 30px 22px;
+}
+
+.vriddhi-app:not(.is-dashboard-view) .vriddhi-hero {
+	display: none;
+}
+
+.vriddhi-toolbar {
+	align-items: flex-start;
+	display: flex;
+	gap: 18px;
+	justify-content: space-between;
+	margin-bottom: 18px;
+}
+
+.vriddhi-toolbar > div:first-child {
+	max-width: 900px;
+}
+
+.vriddhi-toolbar h2 {
+	color: #0f172a;
+	font-size: 32px;
+	font-weight: 760;
+	letter-spacing: 0;
+	line-height: 1.12;
+	margin: 4px 0 8px;
+}
+
+.vriddhi-subtitle {
+	color: #475569;
+	font-size: 14px;
+	line-height: 1.45;
+	margin: 0;
+	max-width: 780px;
+}
+
+.vriddhi-eyebrow {
+	color: #0f766e;
+	font-size: 12px;
+	font-weight: 760;
+	letter-spacing: 0;
+	text-transform: uppercase;
+}
+
+.vriddhi-period {
+	display: flex;
+	gap: 8px;
+}
+
+.vriddhi-period .form-control {
+	background: rgba(255, 255, 255, 0.9);
+	border-color: #cbded9;
+	border-radius: 7px;
+	color: #0f172a;
+	min-width: 150px;
+}
+
+.vriddhi-command-bar {
+	align-items: stretch;
+	display: grid;
+	gap: 10px;
+	grid-template-columns: 1.1fr 1.2fr 1.3fr 1fr;
+}
+
+.vriddhi-command-group {
+	align-items: center;
+	background: rgba(255, 255, 255, 0.72);
+	border: 1px solid #dbe7e3;
+	border-radius: 8px;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 7px;
+	padding: 10px;
+}
+
+.vriddhi-command-group > span {
+	color: #64748b;
+	flex: 0 0 100%;
+	font-size: 11px;
+	font-weight: 700;
+	text-transform: uppercase;
+}
+
+.vriddhi-command-group .btn {
+	border-radius: 7px;
+	box-shadow: 0 1px 1px rgba(15, 23, 42, 0.04);
+}
+
+.vriddhi-command-group .btn-primary {
+	background: #0f172a;
+	border-color: #0f172a;
+}
+
+.vriddhi-cards,
+.vriddhi-insights,
+.vriddhi-tax-panel,
+.vriddhi-grid,
+.vriddhi-tables,
+.vriddhi-section-head {
+	margin-left: 30px;
+	margin-right: 30px;
+}
+
+.vriddhi-cards {
+	display: grid;
+	gap: 12px;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	margin-top: 18px;
+}
+
+.vriddhi-card {
+	background: #ffffff;
+	border: 1px solid #dfe6e4;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+	min-height: 118px;
+	padding: 14px;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	transition: border-color 0.15s ease, box-shadow 0.15s ease, transform 0.15s ease;
+}
+
+.vriddhi-card:hover {
+	border-color: #86cfc1;
+	box-shadow: 0 10px 28px rgba(15, 23, 42, 0.1);
+	transform: translateY(-1px);
+}
+
+.vriddhi-card span,
+.vriddhi-card small {
+	color: #64748b;
+	display: block;
+	font-size: 12px;
+}
+
+.vriddhi-card strong {
+	color: #071222;
+	display: block;
+	font-size: clamp(20px, 1.45vw, 24px);
+	font-weight: 760;
+	font-variant-numeric: tabular-nums;
+	letter-spacing: 0;
+	margin: 7px 0 8px;
+	text-align: right;
+	white-space: nowrap;
+}
+
+.vriddhi-insights {
+	display: grid;
+	gap: 10px;
+	grid-template-columns: repeat(5, minmax(0, 1fr));
+	margin-top: 12px;
+}
+
+.vriddhi-insight {
+	background: #09231f;
+	border: 1px solid #153f38;
+	border-radius: 8px;
+	color: #ecfdf5;
+	padding: 13px;
+}
+
+.vriddhi-insight span,
+.vriddhi-insight small {
+	color: #9debd8;
+	display: block;
+	font-size: 11px;
+}
+
+.vriddhi-insight strong {
+	color: #ffffff;
+	display: block;
+	font-size: 19px;
+	font-weight: 760;
+	margin: 5px 0;
+}
+
+.vriddhi-tax-panel {
+	align-items: center;
+	background: #ffffff;
+	border: 1px solid #dfe6e4;
+	border-radius: 8px;
+	display: grid;
+	gap: 12px;
+	grid-template-columns: 1.4fr repeat(4, minmax(0, 1fr));
+	margin-top: 12px;
+	padding: 14px;
+}
+
+.vriddhi-tax-panel h3,
+.vriddhi-section-head h3 {
+	font-size: 18px;
+	font-weight: 760;
+	margin: 2px 0 0;
+}
+
+.vriddhi-tax-metric {
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 7px;
+	padding: 11px;
+}
+
+.vriddhi-tax-metric span {
+	color: #64748b;
+	display: block;
+	font-size: 11px;
+}
+
+.vriddhi-tax-metric strong {
+	color: #0f172a;
+	display: block;
+	font-size: 17px;
+	margin-top: 5px;
+}
+
+.vriddhi-section-head {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+	margin-top: 20px;
+}
+
+.vriddhi-chart-filters {
+	background: #ffffff;
+	border: 1px solid #dfe6e4;
+	border-radius: 8px;
+	display: flex;
+	gap: 4px;
+	padding: 4px;
+}
+
+.vriddhi-chart-filters button {
+	background: transparent;
+	border: 0;
+	border-radius: 6px;
+	color: #475569;
+	font-size: 12px;
+	font-weight: 650;
+	padding: 7px 10px;
+}
+
+.vriddhi-chart-filters button.active {
+	background: #0f172a;
+	color: #ffffff;
+}
+
+.vriddhi-chart-picker,
+.vriddhi-table-picker {
+	align-items: center;
+	background: #ffffff;
+	border: 1px solid #dfe6e4;
+	border-radius: 8px;
+	display: grid;
+	gap: 12px;
+	grid-template-columns: 220px 1fr auto;
+	margin: 12px 30px 0;
+	padding: 12px;
+}
+
+.vriddhi-chart-picker strong,
+.vriddhi-table-picker strong {
+	color: #0f172a;
+	display: block;
+	font-size: 14px;
+	margin-top: 2px;
+}
+
+.vriddhi-chart-choice-list,
+.vriddhi-table-choice-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 7px;
+}
+
+.vriddhi-chart-choice {
+	align-items: center;
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 999px;
+	color: #334155;
+	display: inline-flex;
+	font-size: 12px;
+	font-weight: 650;
+	gap: 6px;
+	margin: 0;
+	padding: 6px 9px;
+	white-space: nowrap;
+}
+
+.vriddhi-chart-choice input {
+	accent-color: #0f766e;
+	margin: 0;
+}
+
+.vriddhi-grid,
+.vriddhi-tables {
+	display: grid;
+	gap: 14px;
+	margin-top: 12px;
+}
+
+.vriddhi-grid {
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.vriddhi-wide {
+	grid-column: span 2;
+}
+
+.vriddhi-full {
+	grid-column: 1 / -1;
+}
+
+.vriddhi-tables {
+	grid-template-columns: minmax(0, 1fr);
+}
+
+.vriddhi-grid section,
+.vriddhi-tables section {
+	background: #ffffff;
+	border: 1px solid #dfe6e4;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+	overflow: hidden;
+	padding: 14px;
+}
+
+.vriddhi-tables section:last-child {
+	grid-column: 1 / -1;
+}
+
+.vriddhi-card-head {
+	align-items: flex-start;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 10px;
+}
+
+.vriddhi-chart-card.vriddhi-full .vriddhi-chart-canvas {
+	height: 430px;
+}
+
+.vriddhi-tables .vriddhi-card-head {
+	align-items: center;
+	border-bottom: 1px solid #edf2f7;
+	padding-bottom: 10px;
+}
+
+.vriddhi-tables section[data-table-card="feature_coverage"] .vriddhi-card-head,
+.vriddhi-tables section[data-table-card="data_coverage"] .vriddhi-card-head {
+	background: linear-gradient(90deg, #ecfdf5, #eff6ff);
+	border: 1px solid #b7ead8;
+	border-radius: 8px;
+	margin: -2px -2px 12px;
+	padding: 12px;
+}
+
+.vriddhi-tables section[data-table-card="feature_coverage"] .vriddhi-card-head h3,
+.vriddhi-tables section[data-table-card="data_coverage"] .vriddhi-card-head h3 {
+	color: #047857;
+	font-size: 16px;
+}
+
+.vriddhi-tables .vriddhi-card-head span {
+	background: #f1f5f9;
+	border-radius: 999px;
+	color: #475569;
+	font-size: 11px;
+	font-weight: 700;
+	padding: 4px 8px;
+	white-space: nowrap;
+}
+
+.vriddhi-grid h3,
+.vriddhi-tables h3,
+.vriddhi-card-head h3 {
+	color: #0f172a;
+	font-size: 15px;
+	font-weight: 760;
+	margin: 0;
+}
+
+.vriddhi-card-head span {
+	color: #64748b;
+	font-size: 12px;
+}
+
+.vriddhi-table th {
+	background: #f8fafc;
+	color: #64748b;
+	font-size: 12px;
+	text-transform: capitalize;
+	white-space: normal;
+}
+
+.vriddhi-table td {
+	color: #1e293b;
+	font-size: 13px;
+	line-height: 1.35;
+	overflow-wrap: anywhere;
+	vertical-align: middle;
+}
+
+.vriddhi-table {
+	margin-bottom: 0;
+	table-layout: fixed;
+	width: 100%;
+}
+
+.vriddhi-table th,
+.vriddhi-table td {
+	padding: 10px 8px !important;
+}
+
+.vriddhi-table tbody tr:hover {
+	background: #f8fafc;
+}
+
+.vriddhi-focus-glow {
+	animation: vriddhi-focus-pulse 2.6s ease-out;
+	box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.18), 0 16px 42px rgba(15, 118, 110, 0.18) !important;
+}
+
+@keyframes vriddhi-focus-pulse {
+	0% {
+		box-shadow: 0 0 0 0 rgba(20, 184, 166, 0.45), 0 0 0 rgba(15, 118, 110, 0);
+	}
+	100% {
+		box-shadow: 0 0 0 18px rgba(20, 184, 166, 0), 0 16px 42px rgba(15, 118, 110, 0.18);
+	}
+}
+
+.vriddhi-status {
+	background: #eef2f7;
+	border: 1px solid #d8dee8;
+	border-radius: 999px;
+	color: #334155;
+	display: inline-block;
+	font-size: 12px;
+	font-weight: 650;
+	line-height: 1;
+	padding: 5px 8px;
+	white-space: nowrap;
+}
+
+.vriddhi-status-paid,
+.vriddhi-status-sent,
+.vriddhi-status-matched,
+.vriddhi-status-live {
+	background: #ecfdf5;
+	border-color: #a7f3d0;
+	color: #047857;
+}
+
+.vriddhi-status-overdue,
+.vriddhi-status-failed,
+.vriddhi-status-needs-review {
+	background: #fef2f2;
+	border-color: #fecaca;
+	color: #b91c1c;
+}
+
+.vriddhi-status-partially-paid,
+.vriddhi-status-partial,
+.vriddhi-status-simulated,
+.vriddhi-status-live-simulated,
+.vriddhi-status-queued,
+.vriddhi-status-unmatched {
+	background: #fffbeb;
+	border-color: #fde68a;
+	color: #92400e;
+}
+
+.vriddhi-evidence {
+	color: #475569;
+	font-size: 12px;
+}
+
+.vriddhi-row-actions {
+	min-width: 150px;
+	white-space: nowrap;
+}
+
+.vriddhi-row-actions .btn {
+	border-radius: 7px;
+	margin-right: 4px;
+}
+
+.vriddhi-brand-mark {
+	align-items: center !important;
+	background: #0f172a !important;
+	border-radius: 7px !important;
+	color: #fff !important;
+	display: inline-flex !important;
+	font-weight: 800 !important;
+	height: 34px !important;
+	justify-content: center !important;
+	letter-spacing: 0 !important;
+	width: 42px !important;
+}
+
+.vriddhi-brand-mark span {
+	color: #fff !important;
+	font-size: 13px !important;
+	line-height: 1 !important;
+}
+
+.vriddhi-product-shell .search-bar,
+.vriddhi-product-shell .navbar .form-control,
+.vriddhi-product-shell .navbar [role="combobox"],
+.vriddhi-product-shell .navbar .help-box,
+.vriddhi-product-shell .navbar .help-dropdown,
+.vriddhi-product-shell .navbar [data-original-title="Help"],
+.vriddhi-locked-shell .layout-side-section,
+.vriddhi-locked-shell .standard-sidebar-section,
+.vriddhi-locked-shell .desk-sidebar,
+.vriddhi-locked-shell .onboarding-widget-box,
+.vriddhi-locked-shell .page-actions .menu-btn-group,
+.vriddhi-locked-shell .page-actions .actions-btn-group,
+.vriddhi-locked-shell .page-actions .dropdown,
+.vriddhi-locked-shell .standard-actions .menu-btn-group,
+.vriddhi-locked-shell .standard-actions .actions-btn-group,
+.vriddhi-locked-shell .list-sidebar-button {
+	display: none !important;
+}
+
+.vriddhi-locked-shell .layout-main-section-wrapper {
+	margin-left: 0 !important;
+	width: 100% !important;
+}
+
+.vriddhi-hidden-menu-item {
+	display: none !important;
+}
+
+.vriddhi-product-shell .dropdown-menu .vriddhi-profile-action {
+	color: #0f766e !important;
+	font-weight: 650;
+}
+
+.vriddhi-product-shell .page-head .title-text {
+	color: #0f172a;
+	font-weight: 760;
+	max-width: none !important;
+}
+
+.vriddhi-product-shell .navbar,
+.vriddhi-product-shell .page-head,
+.vriddhi-product-shell .layout-main-section,
+.vriddhi-product-shell .page-container {
+	background: #ffffff !important;
+}
+
+.vriddhi-login-page {
+	background: #f4f7f6 !important;
+}
+
+.vriddhi-login-page .navbar,
+.vriddhi-login-page .web-footer,
+.vriddhi-login-page .page-breadcrumbs {
+	display: none !important;
+}
+
+.vriddhi-login-page .page-card,
+.vriddhi-login-page .for-login .page-card {
+	border: 1px solid #dfe6e4 !important;
+	border-radius: 10px !important;
+	box-shadow: 0 16px 42px rgba(15, 23, 42, 0.08) !important;
+}
+
+.vriddhi-login-page .page-card-head h4,
+.vriddhi-login-page .page-card-head h3,
+.vriddhi-login-page .page-card-head .indicator {
+	color: #0f172a !important;
+	font-weight: 760 !important;
+}
+
+.vriddhi-empty {
+	align-items: center;
+	background: #f8fafc;
+	border: 1px dashed #cbd5e1;
+	border-radius: 8px;
+	color: #64748b;
+	display: flex;
+	font-size: 13px;
+	justify-content: center;
+	min-height: 120px;
+	padding: 18px;
+}
+
+.vriddhi-dashboard.is-loading {
+	cursor: progress;
+}
+
+[data-theme="dark"] .vriddhi-dashboard,
+.dark .vriddhi-dashboard {
+	background: #f4f7f6 !important;
+	color: #0f172a !important;
+}
+
+[data-theme="dark"] .vriddhi-dashboard *,
+.dark .vriddhi-dashboard * {
+	text-shadow: none !important;
+}
+
+@media (max-width: 1200px) {
+	.vriddhi-command-bar,
+	.vriddhi-cards,
+	.vriddhi-insights,
+	.vriddhi-tax-panel,
+	.vriddhi-chart-picker,
+	.vriddhi-table-picker,
+	.vriddhi-grid,
+	.vriddhi-tables {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.vriddhi-tables {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	.vriddhi-wide,
+	.vriddhi-full,
+	.vriddhi-tables section:last-child {
+		grid-column: 1 / -1;
+	}
+}
+
+@media (max-width: 760px) {
+	.vriddhi-hero {
+		padding: 18px;
+	}
+
+	.vriddhi-toolbar,
+	.vriddhi-period,
+	.vriddhi-section-head {
+		align-items: stretch;
+		flex-direction: column;
+	}
+
+	.vriddhi-command-bar,
+	.vriddhi-cards,
+	.vriddhi-insights,
+	.vriddhi-tax-panel,
+	.vriddhi-chart-picker,
+	.vriddhi-table-picker,
+	.vriddhi-grid,
+	.vriddhi-tables {
+		grid-template-columns: 1fr;
+	}
+
+	.vriddhi-cards,
+	.vriddhi-insights,
+	.vriddhi-tax-panel,
+	.vriddhi-chart-picker,
+	.vriddhi-table-picker,
+	.vriddhi-grid,
+	.vriddhi-tables,
+	.vriddhi-section-head {
+		margin-left: 18px;
+		margin-right: 18px;
+	}
+
+	.vriddhi-command-group .btn,
+	.vriddhi-chart-filters button {
+		flex: 1 1 auto;
+	}
+
+	.vriddhi-toolbar h2 {
+		font-size: 25px;
+	}
+}
+
+.vriddhi-app {
+	background: #eef4f2;
+	display: grid;
+	grid-template-columns: 248px minmax(0, 1fr);
+	margin: -15px;
+	min-height: calc(100vh - 60px);
+}
+
+.vriddhi-app .vriddhi-dashboard {
+	margin: 0;
+	min-height: calc(100vh - 60px);
+	overflow-x: hidden;
+	padding-bottom: 36px;
+}
+
+.vriddhi-sidebar {
+	background: #0b1f1c;
+	border-right: 1px solid #143c35;
+	color: #d7fff5;
+	min-height: calc(100vh - 60px);
+	padding: 16px 12px;
+	position: sticky;
+	top: 0;
+}
+
+.vriddhi-sidebar-brand {
+	align-items: center;
+	display: flex;
+	gap: 10px;
+	margin-bottom: 16px;
+	padding: 4px 6px 12px;
+}
+
+.vriddhi-sidebar-brand span {
+	align-items: center;
+	background: #e7fff8;
+	border-radius: 7px;
+	color: #0b1f1c;
+	display: inline-flex;
+	font-size: 12px;
+	font-weight: 800;
+	height: 32px;
+	justify-content: center;
+	width: 38px;
+}
+
+.vriddhi-sidebar-brand strong {
+	color: #ffffff;
+	font-size: 15px;
+	font-weight: 760;
+}
+
+.vriddhi-nav-item {
+	background: transparent;
+	border: 0;
+	border-radius: 7px;
+	color: #c7efe7;
+	display: block;
+	font-size: 14px;
+	font-weight: 650;
+	margin: 2px 0;
+	padding: 9px 10px;
+	text-align: left;
+	width: 100%;
+}
+
+.vriddhi-nav-item:hover,
+.vriddhi-nav-item.active {
+	background: rgba(231, 255, 248, 0.12);
+	color: #ffffff;
+}
+
+.vriddhi-nav-parent {
+	color: #8eead9;
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+.vriddhi-nav-children {
+	border-left: 1px solid rgba(231, 255, 248, 0.18);
+	margin: 4px 0 8px 12px;
+	padding-left: 8px;
+}
+
+.vriddhi-nav-divider {
+	border-top: 1px solid rgba(231, 255, 248, 0.16);
+	margin: 12px 6px;
+}
+
+.vriddhi-chart-actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 5px;
+	justify-content: flex-end;
+}
+
+.vriddhi-chart-canvas {
+	height: 310px;
+	min-height: 310px;
+	width: 100%;
+}
+
+.vriddhi-chart-card:not(.vriddhi-wide):not(.vriddhi-full) .vriddhi-chart-canvas {
+	height: 280px;
+	min-height: 280px;
+}
+
+.vriddhi-panel {
+	display: none;
+	margin: 24px 30px;
+}
+
+.vriddhi-workspace {
+	background: transparent;
+	color: #0f172a;
+}
+
+.vriddhi-workspace-head {
+	align-items: flex-start;
+	background: #ffffff;
+	border: 1px solid #dfe6e4;
+	border-radius: 8px;
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 14px;
+	padding: 18px;
+}
+
+.vriddhi-workspace-head h2 {
+	color: #0f172a;
+	font-size: 26px;
+	font-weight: 760;
+	margin: 3px 0 6px;
+}
+
+.vriddhi-workspace-head p {
+	color: #475569;
+	margin: 0;
+	max-width: 760px;
+}
+
+.vriddhi-workspace-shortcuts,
+.vriddhi-workspace-groups section,
+.vriddhi-calculator-card,
+.vriddhi-profile-grid section {
+	background: #ffffff;
+	border: 1px solid #dfe6e4;
+	border-radius: 8px;
+	box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+	padding: 16px;
+}
+
+.vriddhi-workspace-shortcuts {
+	margin-bottom: 14px;
+}
+
+.vriddhi-workspace-shortcuts h3,
+.vriddhi-workspace-groups h3,
+.vriddhi-calculator-card h3,
+.vriddhi-profile-grid h3 {
+	color: #0f172a;
+	font-size: 16px;
+	font-weight: 760;
+	margin: 0 0 12px;
+}
+
+.vriddhi-shortcut-grid,
+.vriddhi-workspace-groups,
+.vriddhi-calculator-grid,
+.vriddhi-profile-grid {
+	display: grid;
+	gap: 14px;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.vriddhi-workspace-link {
+	align-items: center;
+	border-bottom: 1px solid #edf2f1;
+	color: #0f172a;
+	display: flex;
+	font-size: 14px;
+	justify-content: space-between;
+	padding: 9px 0;
+	text-decoration: none;
+}
+
+.vriddhi-workspace-link:hover {
+	color: #0f766e;
+	text-decoration: none;
+}
+
+.vriddhi-workspace-link span {
+	background: #eef6f3;
+	border-radius: 999px;
+	color: #0f766e;
+	font-size: 12px;
+	font-weight: 700;
+	padding: 3px 8px;
+}
+
+.vriddhi-calc-fields {
+	display: grid;
+	gap: 9px;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.vriddhi-calc-fields label {
+	margin: 0;
+}
+
+.vriddhi-calc-fields span {
+	color: #64748b;
+	display: block;
+	font-size: 12px;
+	margin-bottom: 4px;
+}
+
+.vriddhi-calc-results {
+	border-top: 1px solid #edf2f1;
+	display: grid;
+	gap: 8px;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	margin-top: 12px;
+	padding-top: 12px;
+}
+
+.vriddhi-calc-results div,
+.vriddhi-role-row {
+	background: #f8fafc;
+	border: 1px solid #e2e8f0;
+	border-radius: 7px;
+	padding: 10px;
+}
+
+.vriddhi-calc-results span,
+.vriddhi-role-row span,
+.vriddhi-role-row small {
+	color: #64748b;
+	display: block;
+	font-size: 12px;
+}
+
+.vriddhi-calc-results strong,
+.vriddhi-role-row strong {
+	color: #0f172a;
+	display: block;
+	font-size: 16px;
+	font-weight: 760;
+}
+
+.vriddhi-role-pills {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 8px;
+	margin-top: 12px;
+}
+
+.vriddhi-role-pills span {
+	background: #ecfdf5;
+	border: 1px solid #a7f3d0;
+	border-radius: 999px;
+	color: #047857;
+	font-size: 12px;
+	font-weight: 700;
+	padding: 6px 9px;
+}
+
+.vriddhi-product-shell .standard-sidebar-section,
+.vriddhi-product-shell .desk-sidebar,
+.vriddhi-product-shell .layout-side-section,
+.vriddhi-product-shell .onboarding-widget-box,
+.vriddhi-product-shell .workspace-footer,
+.vriddhi-product-shell .workspace-edit-button,
+.vriddhi-product-shell [data-label="Edit"],
+.vriddhi-product-shell [data-label="New"] {
+	display: none !important;
+}
+
+.vriddhi-product-shell .navbar .notifications-seen .es-icon,
+.vriddhi-product-shell .notifications-list .settings,
+.vriddhi-product-shell .notifications-list [title="Settings"],
+.vriddhi-product-shell .notifications-list .octicon-gear,
+.vriddhi-product-shell .notifications-list .fa-gear {
+	display: none !important;
+}
+
+[data-theme="dark"] .vriddhi-app,
+.dark .vriddhi-app,
+[data-theme="dark"] .vriddhi-app *,
+.dark .vriddhi-app * {
+	color-scheme: light !important;
+	text-shadow: none !important;
+}
+
+[data-theme="dark"] .vriddhi-app .vriddhi-dashboard,
+.dark .vriddhi-app .vriddhi-dashboard,
+[data-theme="dark"] .vriddhi-app .vriddhi-workspace-head,
+.dark .vriddhi-app .vriddhi-workspace-head,
+[data-theme="dark"] .vriddhi-app .vriddhi-card,
+.dark .vriddhi-app .vriddhi-card,
+[data-theme="dark"] .vriddhi-app .vriddhi-grid section,
+.dark .vriddhi-app .vriddhi-grid section,
+[data-theme="dark"] .vriddhi-app .vriddhi-tables section,
+.dark .vriddhi-app .vriddhi-tables section,
+[data-theme="dark"] .vriddhi-app .vriddhi-calculator-card,
+.dark .vriddhi-app .vriddhi-calculator-card {
+	background-color: #ffffff !important;
+	color: #0f172a !important;
+}
+
+@media (max-width: 1000px) {
+	.vriddhi-app {
+		grid-template-columns: 1fr;
+	}
+
+	.vriddhi-sidebar {
+		min-height: auto;
+		position: static;
+	}
+
+	.vriddhi-sidebar nav {
+		display: grid;
+		gap: 4px;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.vriddhi-nav-children {
+		border-left: 0;
+		margin-left: 0;
+		padding-left: 0;
+	}
+
+	.vriddhi-shortcut-grid,
+	.vriddhi-workspace-groups,
+	.vriddhi-calculator-grid,
+	.vriddhi-profile-grid {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (max-width: 760px) {
+	.vriddhi-app {
+		margin: -10px;
+	}
+
+	.vriddhi-panel {
+		margin: 18px;
+	}
+
+	.vriddhi-sidebar nav,
+	.vriddhi-shortcut-grid,
+	.vriddhi-workspace-groups,
+	.vriddhi-calculator-grid,
+	.vriddhi-profile-grid,
+	.vriddhi-calc-fields,
+	.vriddhi-calc-results {
+		grid-template-columns: 1fr;
+	}
+
+	.vriddhi-chart-actions {
+		justify-content: flex-start;
+		margin-top: 8px;
+	}
+
+	.vriddhi-card-head {
+		display: block;
+	}
+}

@@ -1,0 +1,5 @@
+Copyright (c) 2026 Vriddhi Capital Team
+
+This custom application code is provided for the Vriddhi Capital submission.
+It is designed to run on a Frappe/ERPNext deployment and does not remove or
+replace any upstream license obligations from installed foundation components.

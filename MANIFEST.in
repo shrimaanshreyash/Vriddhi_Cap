@@ -1,0 +1,6 @@
+include license.txt
+recursive-include vriddhi_capital *.json
+recursive-include vriddhi_capital *.py
+recursive-include vriddhi_capital *.js
+recursive-include vriddhi_capital *.html
+recursive-include vriddhi_capital *.css
