@@ -1,8 +1,22 @@
 # Vriddhi Capital
 
-Vriddhi Capital is a startup finance cockpit for financial tracking, GST invoicing, receivables/payables, accountant exports, and automated invoice communication.
+Vriddhi Capital is a startup finance cockpit for Indian founders and finance teams. It brings revenue tracking, expense control, receivables, payables, GST invoicing, accountant exports, tax planning, role-based access, and automated invoice communication into one production-ready operating system.
 
-The product layer is implemented as a custom Frappe app on top of the open-source Frappe/ERPNext platform and India-compliance-compatible accounting workflows. Vriddhi Capital owns the curated dashboard, seeded operating data, calculators, navigation, notification audit logs, custom fields, roles, and submission-facing experience.
+The product is designed for SaaS, service, consulting, agency, and early-stage startup teams that need finance visibility without waiting for a full accounting department. A founder can see cash runway, GST exposure, overdue collections, budget burn, revenue mix, foreign-currency exposure, and reminder status from the main dashboard, while an accountant can still reach invoices, ledgers, payables, and exports when needed.
+
+The product layer is implemented as a custom Frappe app on top of the open-source Frappe/ERPNext platform and India-compliance-compatible accounting workflows. Vriddhi Capital owns the curated dashboard, dense startup dataset, calculators, product navigation, notification audit logs, custom fields, user roles, operating workflows, and submission-facing experience.
+
+## Product Modules
+
+- **Founder cockpit:** live financial KPIs, cash runway, GST exposure, receivables, payables, tax estimate, overdue invoices, and dashboard period controls.
+- **Income and invoicing:** GST sales invoice creation with client records, GSTIN, HSN/SAC, invoice numbering, status tracking, PDF generation, and IRN-style reference evidence.
+- **Expense and payables:** vendor bills, category-tagged expenditure, input GST credit, payable aging, purchase invoice records, and payment workflows.
+- **Receivables and reminders:** outstanding client invoices, due dates, overdue status, collection aging, reminder sequence, and notification trigger logs.
+- **GST India workspace:** CGST/SGST/IGST evidence, GST composition chart, recent GST invoices, seeded HSN/SAC usage, and compliance proof panels.
+- **Financial reports:** P&L-oriented dashboard views, ledgers, receivable/payable evidence, budget tracking, YoY/MoM trends, and accountant-ready exports.
+- **Founder calculators:** GST liability, advance tax, runway/burn, DSO, budget variance, GST pricing, and FX impact calculators.
+- **Integrations:** Email and Telegram invoice delivery/reminder triggers with visible delivery/audit logs and simulated fallback when live channels are unavailable.
+- **Access control:** Founder, Accountant, Finance Viewer, and Vriddhi Judge roles with curated product navigation and blocked raw admin routes for judge-facing accounts.
 
 ## Tech Stack
 
@@ -12,6 +26,14 @@ The product layer is implemented as a custom Frappe app on top of the open-sourc
 - Charts: Apache ECharts bundled locally in `public/js/echarts.min.js`
 - Notifications: Frappe Email Account plus Telegram Bot API, with simulated audit-log fallback
 - Deployment: Docker/bench production site on Ubuntu EC2
+
+## Design Goals
+
+- **Production-first:** persistent database records, real authentication, hosted deployment, seeded financial data, and working CRUD flows.
+- **Founder-readable:** financial metrics are shown in business language instead of only accounting report language.
+- **Accountant-compatible:** invoices, payment entries, ledgers, budgets, exports, and master data remain structured for finance review.
+- **India-ready:** GST fields, HSN/SAC codes, tax split examples, GSTIN records, and invoice PDFs are built into the operating flow.
+- **Submission-safe:** judge-facing users see a curated product shell with the important finance modules and no unrelated framework navigation.
 
 ## Setup
 
@@ -63,6 +85,8 @@ The seed creates realistic startup finance data across FY 2023-24, FY 2024-25, F
 - USD/EUR/AED client billing data plus currency exchange records
 - Email/Telegram invoice delivery and reminder trigger logs
 
+The dataset is intentionally dense enough for charts, filters, aging reports, category breakdowns, reminders, and exports to be visible immediately after login. Judges do not need to create records from scratch to understand the product.
+
 ## Feature Checklist
 
 ### Must-Have
@@ -102,5 +126,20 @@ The seed creates realistic startup finance data across FY 2023-24, FY 2024-25, F
 - Calculators: `/app/vriddhi-capital?view=calculators`
 - Account profile: `/app/vriddhi-capital?view=profile`
 - Notification logs: `/app/notification-trigger-log`
+
+## Future Scope
+
+Vriddhi Capital is structured as a modular finance platform, so the next roadmap can expand without changing the core operating model:
+
+- Domain email and branded sender identity for production invoice delivery.
+- Deeper bank reconciliation with rule learning and statement-matching confidence.
+- Founder-facing cash planning scenarios for hiring, marketing spend, runway, and funding events.
+- GST return pack generation with accountant review workflow.
+- Multi-company workspace for founders operating multiple startups under one login.
+- Approval workflows for expenses, vendor payments, invoice write-offs, and budget overrides.
+- Investor reporting pack with board-ready monthly metrics and exportable summaries.
+- Optional WhatsApp Business integration alongside Telegram and Email.
+- Deeper CRM-to-invoice flow for converting opportunities into proposals, invoices, and receivables.
+- Production hardening with backups, domain TLS, monitoring, and a dedicated transactional email provider.
 
 No submission zip is generated from this repo unless explicitly requested.
