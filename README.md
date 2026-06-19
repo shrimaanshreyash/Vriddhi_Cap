@@ -49,6 +49,7 @@ judge@vriddhi.local        / Vriddhi@2026
 ```
 
 Admin credentials should be provided separately by the deployment owner.
+All seeded role accounts are routed through the curated Vriddhi product shell; raw framework/admin routes are blocked from the judge-facing experience.
 
 ## Seeded Data
 

@@ -69,6 +69,7 @@
 		"Toggle Full Width",
 		"Toggle Theme",
 	]);
+	const PRODUCT_ROLES = new Set(["Founder", "Accountant", "Finance Viewer", "Vriddhi Judge"]);
 	let attempts = 0;
 
 	function vriddhi_money(value, currency) {
@@ -104,6 +105,14 @@
 		return Boolean(window.frappe && frappe.user_roles && frappe.user_roles.includes("Vriddhi Judge"));
 	}
 
+	function is_vriddhi_product_user() {
+		if (!window.frappe) return false;
+		const roles = frappe.user_roles || [];
+		const hasProductRole = roles.some((role) => PRODUCT_ROLES.has(role));
+		const user = (frappe.session && frappe.session.user) || "";
+		return hasProductRole || user.endsWith("@vriddhi.local");
+	}
+
 	function is_allowed_path(path) {
 		return ALLOWED_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix.replace(/\/$/, "")}/`));
 	}
@@ -121,15 +130,15 @@
 			window.location.replace(VRIDDHI_ROUTE);
 			return false;
 		}
-		if (is_judge_shell() && path.startsWith("/app/query-report/")) {
+		if (is_vriddhi_product_user() && path.startsWith("/app/query-report/")) {
 			window.location.replace(report_focus_url(path));
 			return false;
 		}
-		if (is_judge_shell() && path === "/app/dunning-type") {
+		if (is_vriddhi_product_user() && path === "/app/dunning-type") {
 			window.location.replace(`${VRIDDHI_ROUTE}?view=receivables`);
 			return false;
 		}
-		if (is_judge_shell() && path.startsWith("/app/") && !is_allowed_path(path)) {
+		if (is_vriddhi_product_user() && path.startsWith("/app/") && !is_allowed_path(path)) {
 			window.location.replace(VRIDDHI_ROUTE);
 			return false;
 		}
@@ -234,7 +243,7 @@
 	}
 
 	function hide_framework_page_menus() {
-		if (!is_judge_shell()) return;
+		if (!is_vriddhi_product_user()) return;
 		const selectors = [
 			".page-actions .menu-btn-group",
 			".page-actions .actions-btn-group",
@@ -295,7 +304,7 @@
 		install_currency_guard();
 		force_light_product_shell();
 		if (!enforce_route()) return;
-		if (is_judge_shell()) document.body.classList.add("vriddhi-locked-shell");
+		if (is_vriddhi_product_user()) document.body.classList.add("vriddhi-locked-shell");
 		polish_logo();
 		hide_help_nodes();
 		normalize_profile_menu();
