@@ -87,7 +87,7 @@ The seed creates realistic startup finance data across FY 2023-24, FY 2024-25, F
 
 The dataset is intentionally dense enough for charts, filters, aging reports, category breakdowns, reminders, and exports to be visible immediately after login. Judges do not need to create records from scratch to understand the product.
 
-## Feature Checklist
+## Feature Checklist Which Are Done
 
 ### Must-Have
 
@@ -120,12 +120,6 @@ The dataset is intentionally dense enough for charts, filters, aging reports, ca
 9. YoY/MoM charts: 4-year growth plus MoM/YoY comparison charts.
 10. Accountant exports: full ledger CSV and Tally-style voucher CSV.
 
-## Judge-Facing Routes
-
-- Main app: `/app/vriddhi-capital`
-- Calculators: `/app/vriddhi-capital?view=calculators`
-- Account profile: `/app/vriddhi-capital?view=profile`
-- Notification logs: `/app/notification-trigger-log`
 
 ## Future Scope
 
@@ -142,4 +136,3 @@ Vriddhi Capital is structured as a modular finance platform, so the next roadmap
 - Deeper CRM-to-invoice flow for converting opportunities into proposals, invoices, and receivables.
 - Production hardening with backups, domain TLS, monitoring, and a dedicated transactional email provider.
 
-No submission zip is generated from this repo unless explicitly requested.
