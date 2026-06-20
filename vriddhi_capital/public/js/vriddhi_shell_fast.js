@@ -366,8 +366,14 @@
 
 	function trim_heavy_dashboard_widgets() {
 		if (!window.location.pathname.startsWith(VRIDDHI_ROUTE)) return;
-		const allowedCharts = new Set(LIGHT_CHARTS);
-		const allowedTables = new Set(LIGHT_TABLES);
+		const checkedCharts = Array.from(document.querySelectorAll("[data-chart-toggle]:checked"))
+			.map((node) => node.getAttribute("data-chart-toggle"))
+			.filter(Boolean);
+		const checkedTables = Array.from(document.querySelectorAll("[data-table-toggle]:checked"))
+			.map((node) => node.getAttribute("data-table-toggle"))
+			.filter(Boolean);
+		const allowedCharts = new Set(checkedCharts.length ? checkedCharts : LIGHT_CHARTS);
+		const allowedTables = new Set(checkedTables.length ? checkedTables : LIGHT_TABLES);
 		document.querySelectorAll("[data-chart-key]").forEach((node) => {
 			const key = node.getAttribute("data-chart-key") || "";
 			if (!allowedCharts.has(key)) node.remove();
