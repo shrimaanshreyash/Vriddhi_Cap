@@ -325,6 +325,11 @@
 			if (!target) return;
 			target.classList.add("vriddhi-focus-glow");
 			target.scrollIntoView({ behavior: "smooth", block: "center" });
+			const url = new URL(window.location.href);
+			if (url.searchParams.get("focus") === focus) {
+				url.searchParams.delete("focus");
+				window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+			}
 			window.setTimeout(() => target.classList.remove("vriddhi-focus-glow"), 2600);
 		}, 600);
 	}

@@ -661,6 +661,13 @@ function get_focus_key() {
 	return params.get("focus") || (window.location.hash ? window.location.hash.slice(1) : "");
 }
 
+function clear_consumed_focus(focus) {
+	const url = new URL(window.location.href);
+	if (url.searchParams.get("focus") !== focus) return;
+	url.searchParams.delete("focus");
+	window.history.replaceState(null, "", `${url.pathname}${url.search}${url.hash}`);
+}
+
 function apply_focus_from_url(page) {
 	const focus = get_focus_key();
 	if (!focus) return;
@@ -670,6 +677,7 @@ function apply_focus_from_url(page) {
 		if (!target.length) return;
 		target.addClass("vriddhi-focus-glow");
 		target[0].scrollIntoView({ behavior: "smooth", block: "center" });
+		clear_consumed_focus(focus);
 		window.setTimeout(() => target.removeClass("vriddhi-focus-glow"), 2600);
 	}, 300);
 }
