@@ -11,7 +11,7 @@ after_install = "vriddhi_capital.install.after_install"
 after_migrate = "vriddhi_capital.install.after_migrate"
 
 app_include_css = "/assets/vriddhi_capital/css/vriddhi_dashboard_fast.css"
-app_include_js = "/assets/vriddhi_capital/js/vriddhi_shell_final.js"
+app_include_js = "/assets/vriddhi_capital/js/vriddhi_shell_final.js?v=20260620_calc"
 web_include_css = "/assets/vriddhi_capital/css/vriddhi_dashboard_fast.css"
 web_include_js = "/assets/vriddhi_capital/js/vriddhi_web.js"
 

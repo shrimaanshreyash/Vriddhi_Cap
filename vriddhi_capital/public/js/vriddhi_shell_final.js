@@ -334,10 +334,147 @@
 		}, 600);
 	}
 
+	function calc_value(inputs, field, fallback) {
+		const value = Number(inputs[field]);
+		return Number.isFinite(value) ? value : fallback || 0;
+	}
+
+	function calc_metric(label, value, unit) {
+		return { label, value: Math.round(Number(value || 0) * 100) / 100, unit };
+	}
+
+	function format_calc_metric(item) {
+		if (item.unit === "currency") return vriddhi_money(item.value || 0);
+		if (item.unit === "percent") return `${Number(item.value || 0).toFixed(1)} %`;
+		if (item.unit === "months") return `${Number(item.value || 0).toFixed(1)} months`;
+		if (item.unit === "days") return `${Number(item.value || 0).toFixed(1)} days`;
+		return Number(item.value || 0).toLocaleString("en-IN");
+	}
+
+	function read_calc_inputs(card) {
+		const inputs = {};
+		card.querySelectorAll("[data-calc-field]").forEach((input) => {
+			const value = Number(input.value);
+			inputs[input.getAttribute("data-calc-field")] = Number.isFinite(value) ? value : 0;
+		});
+		return inputs;
+	}
+
+	function calculate_card(key, inputs) {
+		if (key === "gst") {
+			const output = (calc_value(inputs, "taxable_output") * calc_value(inputs, "gst_rate", 18)) / 100;
+			const input_credit = calc_value(inputs, "input_credit");
+			const net = output - input_credit;
+			return [
+				calc_metric("Output GST", output, "currency"),
+				calc_metric("Input Credit", input_credit, "currency"),
+				calc_metric("Net Payable", net, "currency"),
+				calc_metric("CGST/SGST Split", Math.max(net, 0) / 2, "currency"),
+			];
+		}
+		if (key === "advance_tax") {
+			const taxable_profit = Math.max(calc_value(inputs, "revenue") - calc_value(inputs, "expenses") - calc_value(inputs, "deductions"), 0);
+			const rate = calc_value(inputs, "tax_rate", 25);
+			const estimate = (taxable_profit * rate) / 100;
+			return [
+				calc_metric("Taxable Profit", taxable_profit, "currency"),
+				calc_metric("Annual Estimate", estimate, "currency"),
+				calc_metric("Quarterly Instalment", estimate / 4, "currency"),
+				calc_metric("Effective Rate", rate, "percent"),
+			];
+		}
+		if (key === "runway") {
+			const burn = Math.max(calc_value(inputs, "monthly_burn"), 1);
+			const available = calc_value(inputs, "cash") + calc_value(inputs, "collectable_receivables") - calc_value(inputs, "near_term_payables");
+			return [
+				calc_metric("Available Cash", available, "currency"),
+				calc_metric("Monthly Burn", burn, "currency"),
+				calc_metric("Runway", available / burn, "months"),
+				calc_metric("90-day Cushion", available - burn * 3, "currency"),
+			];
+		}
+		if (key === "dso") {
+			const revenue = Math.max(calc_value(inputs, "revenue"), 1);
+			const days = Math.max(calc_value(inputs, "period_days", 365), 1);
+			const receivables = calc_value(inputs, "receivables");
+			return [
+				calc_metric("DSO", (receivables / revenue) * days, "days"),
+				calc_metric("Receivables", receivables, "currency"),
+				calc_metric("Revenue Window", revenue, "currency"),
+				calc_metric("Daily Revenue", revenue / days, "currency"),
+			];
+		}
+		if (key === "budget") {
+			const months = Math.max(calc_value(inputs, "months", 1), 1);
+			const planned = calc_value(inputs, "monthly_budget") * months;
+			const actual = calc_value(inputs, "actual_spend");
+			return [
+				calc_metric("Planned Spend", planned, "currency"),
+				calc_metric("Actual Spend", actual, "currency"),
+				calc_metric("Variance", planned - actual, "currency"),
+				calc_metric("Utilisation", planned ? (actual / planned) * 100 : 0, "percent"),
+			];
+		}
+		if (key === "pricing") {
+			const months = Math.max(calc_value(inputs, "months", 1), 1);
+			const net = Math.max(calc_value(inputs, "base_price") - calc_value(inputs, "discount"), 0) * months;
+			const gst = (net * calc_value(inputs, "gst_rate", 18)) / 100;
+			return [
+				calc_metric("Net Contract Value", net, "currency"),
+				calc_metric("GST", gst, "currency"),
+				calc_metric("Invoice Total", net + gst, "currency"),
+				calc_metric("Monthly Total", (net + gst) / months, "currency"),
+			];
+		}
+		if (key === "fx") {
+			const booking = calc_value(inputs, "foreign_amount") * calc_value(inputs, "booking_rate");
+			const settlement = calc_value(inputs, "foreign_amount") * calc_value(inputs, "settlement_rate");
+			return [
+				calc_metric("Booked INR", booking, "currency"),
+				calc_metric("Settlement INR", settlement, "currency"),
+				calc_metric("FX Gain/Loss", settlement - booking, "currency"),
+				calc_metric("Rate Movement", calc_value(inputs, "settlement_rate") - calc_value(inputs, "booking_rate"), "number"),
+			];
+		}
+		return [];
+	}
+
+	function refresh_calculator_card(card) {
+		if (!card) return;
+		const key = card.getAttribute("data-calculator");
+		const result = card.querySelector("[data-calc-results]");
+		if (!key || !result) return;
+		const items = calculate_card(key, read_calc_inputs(card));
+		result.innerHTML = items
+			.map((item) => `<div><span>${item.label}</span><strong>${format_calc_metric(item)}</strong></div>`)
+			.join("");
+	}
+
+	function refresh_visible_calculators() {
+		document.querySelectorAll("[data-calculator]").forEach(refresh_calculator_card);
+	}
+
+	function install_calculator_guard() {
+		if (window.__vriddhiCalculatorGuardInstalled) return;
+		window.__vriddhiCalculatorGuardInstalled = true;
+		["input", "change"].forEach((eventName) => {
+			document.addEventListener(
+				eventName,
+				(event) => {
+					const target = event.target;
+					if (!target || !target.matches || !target.matches("[data-calc-field]")) return;
+					refresh_calculator_card(target.closest("[data-calculator]"));
+				},
+				true
+			);
+		});
+	}
+
 	function polish_shell() {
 		polishScheduled = false;
 		attempts += 1;
 		install_currency_guard();
+		install_calculator_guard();
 		force_light_product_shell();
 		force_light_dashboard_preferences();
 		if (!enforce_route()) return;
@@ -349,6 +486,7 @@
 		hide_framework_page_menus();
 		rewrite_workspace_links();
 		apply_vriddhi_focus();
+		refresh_visible_calculators();
 		if (attempts < 4) window.setTimeout(schedule_polish, 450);
 	}
 

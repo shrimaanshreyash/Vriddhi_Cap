@@ -710,22 +710,128 @@ function render_calculator_card(calc, defaults) {
 
 function run_calculator(container, key) {
 	const card = container.find(`[data-calculator="${css_escape(key)}"]`);
+	const inputs = get_calculator_inputs(card);
+	const result = calculate_calculator(key, inputs);
+	render_calculator_results(card, key, result);
+}
+
+function get_calculator_inputs(card) {
 	const inputs = {};
 	card.find("[data-calc-field]").each((_, node) => {
-		inputs[$(node).attr("data-calc-field")] = Number($(node).val() || 0);
+		const value = Number($(node).val());
+		inputs[$(node).attr("data-calc-field")] = Number.isFinite(value) ? value : 0;
 	});
-	frappe.call({
-		method: "vriddhi_capital.api.dashboard.execute_calculator",
-		args: { calculator: key, inputs },
-		callback: (r) => {
-			const result = r.message || { results: [] };
-			card.find(`[data-calc-results="${css_escape(key)}"]`).html(
-				(result.results || [])
-					.map((item) => `<div><span>${escape_html(item.label)}</span><strong>${format_metric(item)}</strong></div>`)
-					.join("")
-			);
-		},
-	});
+	return inputs;
+}
+
+function render_calculator_results(card, key, result) {
+	card.find(`[data-calc-results="${css_escape(key)}"]`).html(
+		(result.results || [])
+			.map((item) => `<div><span>${escape_html(item.label)}</span><strong>${format_metric(item)}</strong></div>`)
+			.join("")
+	);
+}
+
+function calculate_calculator(key, inputs) {
+	const value = (field, fallback = 0) => {
+		const parsed = Number(inputs[field]);
+		return Number.isFinite(parsed) ? parsed : fallback;
+	};
+	const percent = (field, fallback) => value(field, fallback);
+	if (key === "gst") {
+		const output = (value("taxable_output") * percent("gst_rate", 18)) / 100;
+		const input_credit = value("input_credit");
+		const net = output - input_credit;
+		return {
+			results: [
+				calc_metric("Output GST", output, "currency"),
+				calc_metric("Input Credit", input_credit, "currency"),
+				calc_metric("Net Payable", net, "currency"),
+				calc_metric("CGST/SGST Split", Math.max(net, 0) / 2, "currency"),
+			],
+		};
+	}
+	if (key === "advance_tax") {
+		const taxable_profit = Math.max(value("revenue") - value("expenses") - value("deductions"), 0);
+		const rate = percent("tax_rate", 25);
+		const estimate = (taxable_profit * rate) / 100;
+		return {
+			results: [
+				calc_metric("Taxable Profit", taxable_profit, "currency"),
+				calc_metric("Annual Estimate", estimate, "currency"),
+				calc_metric("Quarterly Instalment", estimate / 4, "currency"),
+				calc_metric("Effective Rate", rate, "percent"),
+			],
+		};
+	}
+	if (key === "runway") {
+		const burn = Math.max(value("monthly_burn"), 1);
+		const available = value("cash") + value("collectable_receivables") - value("near_term_payables");
+		return {
+			results: [
+				calc_metric("Available Cash", available, "currency"),
+				calc_metric("Monthly Burn", burn, "currency"),
+				calc_metric("Runway", available / burn, "months"),
+				calc_metric("90-day Cushion", available - burn * 3, "currency"),
+			],
+		};
+	}
+	if (key === "dso") {
+		const revenue = Math.max(value("revenue"), 1);
+		const days = Math.max(value("period_days", 365), 1);
+		const receivables = value("receivables");
+		return {
+			results: [
+				calc_metric("DSO", (receivables / revenue) * days, "days"),
+				calc_metric("Receivables", receivables, "currency"),
+				calc_metric("Revenue Window", revenue, "currency"),
+				calc_metric("Daily Revenue", revenue / days, "currency"),
+			],
+		};
+	}
+	if (key === "budget") {
+		const months = Math.max(value("months", 1), 1);
+		const planned = value("monthly_budget") * months;
+		const actual = value("actual_spend");
+		return {
+			results: [
+				calc_metric("Planned Spend", planned, "currency"),
+				calc_metric("Actual Spend", actual, "currency"),
+				calc_metric("Variance", planned - actual, "currency"),
+				calc_metric("Utilisation", planned ? (actual / planned) * 100 : 0, "percent"),
+			],
+		};
+	}
+	if (key === "pricing") {
+		const months = Math.max(value("months", 1), 1);
+		const net = Math.max(value("base_price") - value("discount"), 0) * months;
+		const gst = (net * percent("gst_rate", 18)) / 100;
+		return {
+			results: [
+				calc_metric("Net Contract Value", net, "currency"),
+				calc_metric("GST", gst, "currency"),
+				calc_metric("Invoice Total", net + gst, "currency"),
+				calc_metric("Monthly Total", (net + gst) / months, "currency"),
+			],
+		};
+	}
+	if (key === "fx") {
+		const booking = value("foreign_amount") * value("booking_rate");
+		const settlement = value("foreign_amount") * value("settlement_rate");
+		return {
+			results: [
+				calc_metric("Booked INR", booking, "currency"),
+				calc_metric("Settlement INR", settlement, "currency"),
+				calc_metric("FX Gain/Loss", settlement - booking, "currency"),
+				calc_metric("Rate Movement", value("settlement_rate") - value("booking_rate"), "number"),
+			],
+		};
+	}
+	return { results: [] };
+}
+
+function calc_metric(label, value, unit) {
+	return { label, value: Math.round(Number(value || 0) * 100) / 100, unit };
 }
 
 function render_profile(page) {
@@ -887,7 +993,6 @@ function set_period(page, period) {
 
 function bind_actions(page) {
 	const body = $(page.body);
-	let calcTimer = null;
 	body.on("click", "[data-nav-view]", (event) => set_view(page, $(event.currentTarget).attr("data-nav-view")));
 	body.on("click", 'a[href^="/app/vriddhi-capital"], a[href^="http://65.0.45.50/app/vriddhi-capital"]', (event) => {
 		const href = $(event.currentTarget).attr("href");
@@ -952,10 +1057,9 @@ function bind_actions(page) {
 	});
 	body.on("click", "[data-chart-export]", (event) => export_chart_png($(event.currentTarget).attr("data-chart-export")));
 	body.on("click", "[data-chart-csv]", (event) => export_chart_csv(page, $(event.currentTarget).attr("data-chart-csv")));
-	body.on("input", "[data-calc-field]", (event) => {
+	body.on("input change", "[data-calc-field]", (event) => {
 		const key = $(event.currentTarget).closest("[data-calculator]").attr("data-calculator");
-		window.clearTimeout(calcTimer);
-		calcTimer = window.setTimeout(() => run_calculator(body, key), 300);
+		run_calculator(body, key);
 	});
 	body.on("click", '[data-action="reminders"]', (event) => run_reminders(page, event.currentTarget));
 	body.on("click", "[data-remind]", (event) => send_invoice_reminder(page, $(event.currentTarget).attr("data-remind")));
