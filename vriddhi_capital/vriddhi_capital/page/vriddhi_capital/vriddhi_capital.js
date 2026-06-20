@@ -12,7 +12,7 @@ const VRIDDHI_CHART_OPTIONS = [
 	{ key: "spend", source: "spend_by_category", label: "Spend Mix", note: "Burn categories", group: "ops", type: "donut" },
 	{ key: "currency", source: "currency_exposure", label: "Currency Exposure", note: "International billing", group: "ops", type: "donut" },
 ];
-const VRIDDHI_DEFAULT_CHARTS = ["revenue", "annual", "cash", "aging", "payables", "budget"];
+const VRIDDHI_DEFAULT_CHARTS = ["revenue", "annual", "cash", "aging"];
 const VRIDDHI_TABLE_OPTIONS = [
 	{ key: "overdue_receivables", label: "Overdue Receivables", doctype: "Sales Invoice", columns: ["name", "customer", "due_date", "outstanding_amount", "status"] },
 	{ key: "upcoming_payables", label: "Upcoming Payables", doctype: "Purchase Invoice", columns: ["name", "supplier", "due_date", "outstanding_amount", "status"] },
@@ -23,8 +23,19 @@ const VRIDDHI_TABLE_OPTIONS = [
 	{ key: "data_coverage", label: "Seeded Data Coverage", doctype: null, columns: ["record_type", "count", "source"] },
 	{ key: "feature_coverage", label: "Feature Coverage", doctype: null, columns: ["category", "feature", "status", "evidence"] },
 ];
-const VRIDDHI_DEFAULT_TABLES = ["overdue_receivables", "upcoming_payables", "recent_invoices", "notification_logs"];
-const VRIDDHI_PREFERENCE_VERSION = 2;
+const VRIDDHI_DEFAULT_TABLES = ["overdue_receivables", "recent_invoices", "notification_logs"];
+const VRIDDHI_PREFERENCE_VERSION = 4;
+const VRIDDHI_CARD_FOCUS = {
+	"Sales Invoice": "recent_invoices",
+	"Purchase Invoice": "upcoming_payables",
+	"Profit and Loss Statement": "revenue",
+	"General Ledger": "cash",
+	"Accounts Receivable": "aging",
+	"Accounts Payable": "payables",
+	"GST Balance": "gst",
+	"Tax Planning": "calculators",
+	"Action required": "overdue_receivables",
+};
 const VRIDDHI_CALCULATORS = [
 	{
 		key: "gst",
@@ -402,8 +413,17 @@ function render_chart_grid(page) {
 	ensure_echarts().then(() => {
 		cards.forEach((option) => {
 			const chartData = page.vriddhi.data && page.vriddhi.data.charts ? page.vriddhi.data.charts[option.source] : null;
-			window.requestAnimationFrame(() => render_echart(option, chartData, page.vriddhi.data ? page.vriddhi.data.currency : "INR"));
+			const render = () => render_echart(option, chartData, page.vriddhi.data ? page.vriddhi.data.currency : "INR");
+			if ("requestIdleCallback" in window) window.requestIdleCallback(render, { timeout: 900 });
+			else window.requestAnimationFrame(render);
 		});
+	});
+}
+
+function resize_active_charts() {
+	if (!window.vriddhiCharts) return;
+	Object.values(window.vriddhiCharts).forEach((chart) => {
+		if (chart && chart.resize) chart.resize();
 	});
 }
 
@@ -568,6 +588,7 @@ function set_view(page, view, pushState = true) {
 	body.find(`[data-nav-view="${css_escape(view)}"]`).addClass("active");
 	if (view === "dashboard") {
 		body.find('[data-panel="dashboard"]').show();
+		window.setTimeout(() => resize_active_charts(), 80);
 	} else if (view === "calculators") {
 		body.find('[data-panel="calculators"]').show();
 		render_calculators(page);
@@ -587,6 +608,24 @@ function set_view(page, view, pushState = true) {
 		const url = view === "dashboard" ? "/app/vriddhi-capital" : `/app/vriddhi-capital?view=${encodeURIComponent(view)}`;
 		window.history.replaceState(null, "", url);
 	}
+}
+
+function focus_dashboard_target(page, focus) {
+	if (!focus) return;
+	if (focus === "calculators") {
+		set_view(page, "calculators");
+		return;
+	}
+	set_view(page, "dashboard");
+	window.history.replaceState(null, "", `/app/vriddhi-capital?focus=${encodeURIComponent(focus)}`);
+	const tableOption = VRIDDHI_TABLE_OPTIONS.some((option) => option.key === focus);
+	if (tableOption && !get_selected_table_keys(page).includes(focus)) {
+		page.vriddhi.preferences.visible_tables = get_selected_table_keys(page).concat(focus);
+		save_preferences(page);
+		render_table_picker($(page.body), page);
+		render_evidence_tables(page);
+	}
+	apply_focus_from_url(page);
 }
 
 function render_workspace(view) {
@@ -793,7 +832,9 @@ function get_local_preferences() {
 
 function normalize_preferences(page) {
 	const prefs = page.vriddhi.preferences || {};
-	if (prefs.preference_version !== VRIDDHI_PREFERENCE_VERSION) {
+	const tooManyCharts = (prefs.visible_charts || []).length > VRIDDHI_DEFAULT_CHARTS.length;
+	const tooManyTables = (prefs.visible_tables || []).length > VRIDDHI_DEFAULT_TABLES.length;
+	if (prefs.preference_version !== VRIDDHI_PREFERENCE_VERSION || tooManyCharts || tooManyTables) {
 		prefs.visible_charts = VRIDDHI_DEFAULT_CHARTS;
 		prefs.visible_tables = VRIDDHI_DEFAULT_TABLES;
 		prefs.preference_version = VRIDDHI_PREFERENCE_VERSION;
@@ -900,10 +941,8 @@ function bind_actions(page) {
 	body.on("click", "[data-remind]", (event) => send_invoice_reminder(page, $(event.currentTarget).attr("data-remind")));
 	body.on("click", ".vriddhi-card", (event) => {
 		const source = $(event.currentTarget).attr("data-source");
-		if (!source || source === "Action required" || source === "Tax Planning") return;
-		if (source === "Profit and Loss Statement") frappe.set_route("query-report", "Profit and Loss Statement");
-		else if (source === "General Ledger") frappe.set_route("query-report", "General Ledger");
-		else frappe.set_route("List", source);
+		const focus = VRIDDHI_CARD_FOCUS[source];
+		if (focus) focus_dashboard_target(page, focus);
 	});
 	body.on("click", 'a[href="#ledger-export"]', (event) => {
 		event.preventDefault();

@@ -10,9 +10,9 @@ app_color = "#0f766e"
 after_install = "vriddhi_capital.install.after_install"
 after_migrate = "vriddhi_capital.install.after_migrate"
 
-app_include_css = "/assets/vriddhi_capital/css/vriddhi_dashboard.css"
-app_include_js = "/assets/vriddhi_capital/js/vriddhi_shell.js"
-web_include_css = "/assets/vriddhi_capital/css/vriddhi_dashboard.css"
+app_include_css = "/assets/vriddhi_capital/css/vriddhi_dashboard_fast.css"
+app_include_js = "/assets/vriddhi_capital/js/vriddhi_shell_fast.js"
+web_include_css = "/assets/vriddhi_capital/css/vriddhi_dashboard_fast.css"
 web_include_js = "/assets/vriddhi_capital/js/vriddhi_web.js"
 
 doc_events = {
