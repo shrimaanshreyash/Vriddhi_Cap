@@ -352,7 +352,9 @@ function render_dashboard(page, data) {
 	render_chart_grid(page);
 	render_table_picker(body, page);
 	render_evidence_tables(page);
-	apply_focus_from_url(page);
+	const focus = get_focus_key();
+	if (focus) focus_dashboard_target(page, focus, false);
+	else apply_focus_from_url(page);
 	body.find('[data-action="export-ledger"]').attr("href", data.actions.ledger_export_url);
 	body.find('[data-action="export-tally"]').attr("href", data.actions.tally_export_url);
 	if (page.vriddhi.activeView === "calculators") render_calculators(page);
@@ -610,14 +612,21 @@ function set_view(page, view, pushState = true) {
 	}
 }
 
-function focus_dashboard_target(page, focus) {
+function focus_dashboard_target(page, focus, pushState = true) {
 	if (!focus) return;
 	if (focus === "calculators") {
-		set_view(page, "calculators");
+		set_view(page, "calculators", pushState);
 		return;
 	}
-	set_view(page, "dashboard");
-	window.history.replaceState(null, "", `/app/vriddhi-capital?focus=${encodeURIComponent(focus)}`);
+	set_view(page, "dashboard", false);
+	if (pushState) window.history.replaceState(null, "", `/app/vriddhi-capital?focus=${encodeURIComponent(focus)}`);
+	const chartOption = VRIDDHI_CHART_OPTIONS.some((option) => option.key === focus);
+	if (chartOption && !get_selected_chart_keys(page).includes(focus)) {
+		page.vriddhi.preferences.visible_charts = get_selected_chart_keys(page).concat(focus);
+		save_preferences(page);
+		render_chart_picker($(page.body), page);
+		render_chart_grid(page);
+	}
 	const tableOption = VRIDDHI_TABLE_OPTIONS.some((option) => option.key === focus);
 	if (tableOption && !get_selected_table_keys(page).includes(focus)) {
 		page.vriddhi.preferences.visible_tables = get_selected_table_keys(page).concat(focus);
@@ -626,6 +635,31 @@ function focus_dashboard_target(page, focus) {
 		render_evidence_tables(page);
 	}
 	apply_focus_from_url(page);
+}
+
+function handle_vriddhi_route(page, href) {
+	const url = new URL(href, window.location.origin);
+	if (url.pathname !== "/app/vriddhi-capital") return false;
+	const params = new URLSearchParams(url.search);
+	window.history.pushState(null, "", `${url.pathname}${url.search}${url.hash}`);
+	const view = params.get("view");
+	const focus = params.get("focus") || (url.hash ? url.hash.slice(1) : "");
+	if (focus && view) {
+		set_view(page, view, false);
+		window.setTimeout(() => apply_focus_from_url(page), 450);
+		return true;
+	}
+	if (focus) {
+		focus_dashboard_target(page, focus, false);
+		return true;
+	}
+	if (view) {
+		set_view(page, view, false);
+		if (url.hash) window.setTimeout(() => apply_focus_from_url(page), 450);
+		return true;
+	}
+	set_view(page, "dashboard", false);
+	return true;
 }
 
 function render_workspace(view) {
@@ -770,8 +804,12 @@ function render_table_picker(body, page) {
 
 function get_selected_chart_keys(page) {
 	const saved = page && page.vriddhi && page.vriddhi.preferences ? page.vriddhi.preferences.visible_charts : null;
-	if (Array.isArray(saved) && saved.length) return saved;
-	return VRIDDHI_DEFAULT_CHARTS;
+	const selected = Array.isArray(saved) && saved.length ? saved.slice() : VRIDDHI_DEFAULT_CHARTS.slice();
+	const focus = get_focus_key();
+	if (focus && VRIDDHI_CHART_OPTIONS.some((option) => option.key === focus) && !selected.includes(focus)) {
+		selected.push(focus);
+	}
+	return selected;
 }
 
 function get_selected_table_keys(page) {
@@ -876,6 +914,13 @@ function bind_actions(page) {
 	const body = $(page.body);
 	let calcTimer = null;
 	body.on("click", "[data-nav-view]", (event) => set_view(page, $(event.currentTarget).attr("data-nav-view")));
+	body.on("click", 'a[href^="/app/vriddhi-capital"], a[href^="http://65.0.45.50/app/vriddhi-capital"]', (event) => {
+		const href = $(event.currentTarget).attr("href");
+		if (!href) return;
+		event.preventDefault();
+		event.stopPropagation();
+		handle_vriddhi_route(page, href);
+	});
 	body.on("click", '[data-action="new-income"]', () => open_income_dialog(page));
 	body.on("click", '[data-action="new-expense"]', () => open_expense_dialog(page));
 	body.on("click", '[data-action="bank-import"]', () => open_bank_import_dialog(page));

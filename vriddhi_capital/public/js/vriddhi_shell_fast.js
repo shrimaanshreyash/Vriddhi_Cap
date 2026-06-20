@@ -351,7 +351,7 @@
 		const focus = params.get("focus") || (window.location.hash ? window.location.hash.slice(1) : "");
 		if (!focus) return;
 		const escapedFocus = window.CSS && CSS.escape ? CSS.escape(focus) : String(focus).replace(/"/g, '\\"');
-		const checkbox = document.querySelector(`[data-table-toggle="${escapedFocus}"]`);
+		const checkbox = document.querySelector(`[data-table-toggle="${escapedFocus}"], [data-chart-toggle="${escapedFocus}"]`);
 		if (checkbox && !checkbox.checked) {
 			checkbox.click();
 		}
@@ -362,26 +362,6 @@
 			target.scrollIntoView({ behavior: "smooth", block: "center" });
 			window.setTimeout(() => target.classList.remove("vriddhi-focus-glow"), 2600);
 		}, 600);
-	}
-
-	function trim_heavy_dashboard_widgets() {
-		if (!window.location.pathname.startsWith(VRIDDHI_ROUTE)) return;
-		const checkedCharts = Array.from(document.querySelectorAll("[data-chart-toggle]:checked"))
-			.map((node) => node.getAttribute("data-chart-toggle"))
-			.filter(Boolean);
-		const checkedTables = Array.from(document.querySelectorAll("[data-table-toggle]:checked"))
-			.map((node) => node.getAttribute("data-table-toggle"))
-			.filter(Boolean);
-		const allowedCharts = new Set(checkedCharts.length ? checkedCharts : LIGHT_CHARTS);
-		const allowedTables = new Set(checkedTables.length ? checkedTables : LIGHT_TABLES);
-		document.querySelectorAll("[data-chart-key]").forEach((node) => {
-			const key = node.getAttribute("data-chart-key") || "";
-			if (!allowedCharts.has(key)) node.remove();
-		});
-		document.querySelectorAll("[data-table-card]").forEach((node) => {
-			const key = node.getAttribute("data-table-card") || "";
-			if (!allowedTables.has(key)) node.remove();
-		});
 	}
 
 	function polish_shell() {
@@ -399,7 +379,6 @@
 		hide_framework_page_menus();
 		rewrite_workspace_links();
 		apply_vriddhi_focus();
-		trim_heavy_dashboard_widgets();
 		if (attempts < 4) window.setTimeout(schedule_polish, 450);
 	}
 
@@ -428,5 +407,4 @@
 	window.addEventListener("hashchange", schedule_polish);
 	window.addEventListener("popstate", schedule_polish);
 	window.setInterval(enforce_route, 2000);
-	window.setInterval(trim_heavy_dashboard_widgets, 700);
 })();
