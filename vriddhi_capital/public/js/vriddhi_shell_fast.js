@@ -22,45 +22,14 @@
 		"/app/contact",
 		"/app/address",
 		"/app/communication",
+		"/app/query-report",
+		"/app/hsn-code",
+		"/app/e-invoice-log",
+		"/app/gst-settings",
+		"/app/gstr-1",
+		"/app/gstr-3b",
+		"/app/dunning-type",
 	];
-	const REPORT_FOCUS = {
-		"accounts payable": "payables",
-		"accounts payable summary": "upcoming_payables",
-		"purchase register": "budget_lines",
-		"supplier ledger summary": "upcoming_payables",
-		"accounts receivable": "aging",
-		"accounts receivable summary": "overdue_receivables",
-		"sales register": "recent_invoices",
-		"sales invoice trends": "revenue",
-		"general ledger": "recent_invoices",
-		"customer ledger summary": "overdue_receivables",
-		"trial balance": "annual",
-		"profit and loss statement": "revenue",
-		"balance sheet": "annual",
-		"cash flow": "cash",
-		"gross profit": "income",
-		"profitability analysis": "mom",
-		"purchase invoice trends": "payables",
-	};
-	const REPORT_ROUTE_FOCUS = {
-		"/app/query-report/accounts%20payable": "payables",
-		"/app/query-report/accounts%20payable%20summary": "upcoming_payables",
-		"/app/query-report/purchase%20register": "budget_lines",
-		"/app/query-report/supplier%20ledger%20summary": "upcoming_payables",
-		"/app/query-report/accounts%20receivable": "aging",
-		"/app/query-report/accounts%20receivable%20summary": "overdue_receivables",
-		"/app/query-report/sales%20register": "recent_invoices",
-		"/app/query-report/sales%20invoice%20trends": "revenue",
-		"/app/query-report/general%20ledger": "recent_invoices",
-		"/app/query-report/customer%20ledger%20summary": "overdue_receivables",
-		"/app/query-report/trial%20balance": "annual",
-		"/app/query-report/profit%20and%20loss%20statement": "revenue",
-		"/app/query-report/balance%20sheet": "annual",
-		"/app/query-report/cash%20flow": "cash",
-		"/app/query-report/gross%20profit": "income",
-		"/app/query-report/profitability%20analysis": "mom",
-		"/app/query-report/purchase%20invoice%20trends": "payables",
-	};
 	const HIDDEN_PROFILE_ITEMS = new Set([
 		"Session Defaults",
 		"Reload",
@@ -74,17 +43,6 @@
 	const LIGHT_PREFERENCE_VERSION = 4;
 	const LIGHT_CHARTS = ["revenue", "annual", "cash", "aging"];
 	const LIGHT_TABLES = ["overdue_receivables", "recent_invoices", "notification_logs"];
-	const CARD_FOCUS = {
-		"Sales Invoice": "recent_invoices",
-		"Purchase Invoice": "upcoming_payables",
-		"Profit and Loss Statement": "revenue",
-		"General Ledger": "cash",
-		"Accounts Receivable": "aging",
-		"Accounts Payable": "payables",
-		"GST Balance": "gst",
-		"Tax Planning": "calculators",
-		"Action required": "overdue_receivables",
-	};
 	let attempts = 0;
 	let polishScheduled = false;
 
@@ -133,21 +91,11 @@
 		return ALLOWED_PREFIXES.some((prefix) => path === prefix || path.startsWith(`${prefix.replace(/\/$/, "")}/`));
 	}
 
-	function report_focus_url(path) {
-		if (!path.startsWith("/app/query-report/")) return "";
-		const reportName = decodeURIComponent(path.replace("/app/query-report/", "")).toLowerCase();
-		const focus = REPORT_FOCUS[reportName] || "feature_coverage";
-		return `${VRIDDHI_ROUTE}?focus=${encodeURIComponent(focus)}`;
-	}
 
 	function enforce_route() {
 		const path = window.location.pathname;
 		if (path === "/app" || path === "/app/" || path === "/app/home") {
 			window.location.replace(VRIDDHI_ROUTE);
-			return false;
-		}
-		if (is_vriddhi_product_user() && path.startsWith("/app/query-report/")) {
-			window.location.replace(report_focus_url(path));
 			return false;
 		}
 		if (is_vriddhi_product_user() && path === "/app/dunning-type") {
@@ -198,29 +146,6 @@
 		return `${VRIDDHI_ROUTE}?focus=${encodeURIComponent(focus)}`;
 	}
 
-	function intercept_product_click(event) {
-		if (!is_vriddhi_product_user()) return;
-		const card = event.target.closest && event.target.closest(".vriddhi-card[data-source]");
-		if (card && window.location.pathname.startsWith(VRIDDHI_ROUTE)) {
-			const focus = CARD_FOCUS[card.getAttribute("data-source") || ""];
-			if (focus) {
-				event.preventDefault();
-				event.stopPropagation();
-				event.stopImmediatePropagation();
-				window.location.assign(focus_url(focus));
-			}
-			return;
-		}
-		const link = event.target.closest && event.target.closest("a[href]");
-		if (!link) return;
-		const href = link.getAttribute("href") || "";
-		if (href.startsWith("/app/query-report/")) {
-			event.preventDefault();
-			event.stopPropagation();
-			event.stopImmediatePropagation();
-			window.location.assign(report_focus_url(href));
-		}
-	}
 
 	function polish_logo() {
 		const logo = document.querySelector(".navbar-brand, .navbar-home, .app-logo");
@@ -331,16 +256,56 @@
 	}
 
 	function rewrite_workspace_links() {
+		const routeByLabel = {
+			"Purchase Invoice": "/app/purchase-invoice",
+			"Supplier": "/app/supplier",
+			"Payment Entry": "/app/payment-entry",
+			"Journal Entry": "/app/journal-entry",
+			"Payment Reconciliation": "/app/payment-reconciliation",
+			"Accounts Payable": "/app/query-report/Accounts%20Payable",
+			"Accounts Payable Summary": "/app/query-report/Accounts%20Payable%20Summary",
+			"Purchase Register": "/app/query-report/Purchase%20Register",
+			"Supplier Ledger Summary": "/app/query-report/Supplier%20Ledger%20Summary",
+			"Sales Invoice": "/app/sales-invoice",
+			"Customer": "/app/customer",
+			"Payment Request": "/app/payment-request",
+			"Dunning": "/app/dunning",
+			"Dunning Type": "/app/dunning-type",
+			"Accounts Receivable": "/app/query-report/Accounts%20Receivable",
+			"Accounts Receivable Summary": "/app/query-report/Accounts%20Receivable%20Summary",
+			"Sales Register": "/app/query-report/Sales%20Register",
+			"Sales Invoice Trends": "/app/query-report/Sales%20Invoice%20Trends",
+			"GST Composition": "/app/query-report/GST%20Balance",
+			"Recent GST Invoices": "/app/sales-invoice",
+			"HSN/SAC Evidence": "/app/hsn-code",
+			"E-invoice/IRN Evidence": "/app/e-invoice-log",
+			"General Ledger": "/app/query-report/General%20Ledger",
+			"Customer Ledger Summary": "/app/query-report/Customer%20Ledger%20Summary",
+			"Trial Balance": "/app/query-report/Trial%20Balance",
+			"P&L Statement": "/app/query-report/Profit%20and%20Loss%20Statement",
+			"Profit and Loss Statement": "/app/query-report/Profit%20and%20Loss%20Statement",
+			"Balance Sheet": "/app/query-report/Balance%20Sheet",
+			"Cash Flow": "/app/query-report/Cash%20Flow",
+			"Gross Profit": "/app/query-report/Gross%20Profit",
+			"Profitability Analysis": "/app/query-report/Profitability%20Analysis",
+			"Purchase Invoice Trends": "/app/query-report/Purchase%20Invoice%20Trends",
+			"Lead": "/app/lead",
+			"Opportunity": "/app/opportunity",
+			"Quotation": "/app/quotation",
+			"Contact": "/app/contact",
+			"Address": "/app/address",
+			"Communication": "/app/communication",
+			"Notification Logs": "/app/notification-trigger-log",
+			"Notification Trigger Logs": "/app/notification-trigger-log",
+			"Bank Import": "/app/bank-import-entry",
+			"Bank Import Entries": "/app/bank-import-entry",
+			"Budget Lines": "/app/budget-line",
+			"Recurring Invoices": "/app/auto-repeat"
+		};
 		document.querySelectorAll(".vriddhi-workspace-link").forEach((link) => {
-			const href = link.getAttribute("href") || "";
-			const normalized = href.split("?")[0].toLowerCase();
-			if (href === "/app/dunning-type" || (link.textContent || "").trim() === "Dunning Type") {
-				link.textContent = "Reminder Evidence";
-				link.setAttribute("href", `${VRIDDHI_ROUTE}?focus=notification_logs`);
-				return;
-			}
-			if (REPORT_ROUTE_FOCUS[normalized]) {
-				link.setAttribute("href", `${VRIDDHI_ROUTE}?focus=${REPORT_ROUTE_FOCUS[normalized]}`);
+			const label = (link.textContent || "").replace(/\d+$/, "").trim();
+			if (routeByLabel[label]) {
+				link.setAttribute("href", routeByLabel[label]);
 			}
 		});
 	}
@@ -401,8 +366,6 @@
 		observer.observe(document.documentElement, { childList: true, subtree: true });
 	}
 	window.setTimeout(() => observer.disconnect(), 3500);
-
-	document.addEventListener("click", intercept_product_click, true);
 	document.addEventListener("click", () => window.setTimeout(schedule_polish, 80), true);
 	window.addEventListener("hashchange", schedule_polish);
 	window.addEventListener("popstate", schedule_polish);

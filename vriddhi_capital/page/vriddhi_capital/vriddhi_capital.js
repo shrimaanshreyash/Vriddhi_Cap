@@ -25,16 +25,16 @@ const VRIDDHI_TABLE_OPTIONS = [
 ];
 const VRIDDHI_DEFAULT_TABLES = ["overdue_receivables", "recent_invoices", "notification_logs"];
 const VRIDDHI_PREFERENCE_VERSION = 4;
-const VRIDDHI_CARD_FOCUS = {
-	"Sales Invoice": "recent_invoices",
-	"Purchase Invoice": "upcoming_payables",
-	"Profit and Loss Statement": "revenue",
-	"General Ledger": "cash",
-	"Accounts Receivable": "aging",
-	"Accounts Payable": "payables",
-	"GST Balance": "gst",
-	"Tax Planning": "calculators",
-	"Action required": "overdue_receivables",
+const VRIDDHI_CARD_ROUTES = {
+	"Sales Invoice": "/app/sales-invoice",
+	"Purchase Invoice": "/app/purchase-invoice",
+	"Profit and Loss Statement": "/app/query-report/Profit%20and%20Loss%20Statement",
+	"General Ledger": "/app/query-report/General%20Ledger",
+	"Accounts Receivable": "/app/query-report/Accounts%20Receivable",
+	"Accounts Payable": "/app/query-report/Accounts%20Payable",
+	"GST Balance": "/app/query-report/GST%20Balance",
+	"Tax Planning": "/app/vriddhi-capital?view=calculators",
+	"Action required": "/app/sales-invoice",
 };
 const VRIDDHI_CALCULATORS = [
 	{
@@ -269,39 +269,6 @@ function load_workspace_metadata(page) {
 }
 
 function sanitize_workspace_metadata(metadata) {
-	const focusRoutes = {
-		"/app/query-report/Accounts%20Payable": "/app/vriddhi-capital?focus=payables",
-		"/app/query-report/Accounts%20Payable%20Summary": "/app/vriddhi-capital?focus=upcoming_payables",
-		"/app/query-report/Purchase%20Register": "/app/vriddhi-capital?focus=budget_lines",
-		"/app/query-report/Supplier%20Ledger%20Summary": "/app/vriddhi-capital?focus=upcoming_payables",
-		"/app/query-report/Accounts%20Receivable": "/app/vriddhi-capital?focus=aging",
-		"/app/query-report/Accounts%20Receivable%20Summary": "/app/vriddhi-capital?focus=overdue_receivables",
-		"/app/query-report/Sales%20Register": "/app/vriddhi-capital?focus=recent_invoices",
-		"/app/query-report/Sales%20Invoice%20Trends": "/app/vriddhi-capital?focus=revenue",
-		"/app/query-report/General%20Ledger": "/app/vriddhi-capital?focus=recent_invoices",
-		"/app/query-report/Customer%20Ledger%20Summary": "/app/vriddhi-capital?focus=overdue_receivables",
-		"/app/query-report/Trial%20Balance": "/app/vriddhi-capital?focus=annual",
-		"/app/query-report/Profit%20and%20Loss%20Statement": "/app/vriddhi-capital?focus=revenue",
-		"/app/query-report/Balance%20Sheet": "/app/vriddhi-capital?focus=annual",
-		"/app/query-report/Cash%20Flow": "/app/vriddhi-capital?focus=cash",
-		"/app/query-report/Gross%20Profit": "/app/vriddhi-capital?focus=income",
-		"/app/query-report/Profitability%20Analysis": "/app/vriddhi-capital?focus=mom",
-		"/app/query-report/Purchase%20Invoice%20Trends": "/app/vriddhi-capital?focus=payables",
-	};
-	const cleanItem = (item) => {
-		if (!item) return item;
-		if (item.route === "/app/dunning-type") {
-			return Object.assign({}, item, { label: "Reminder Evidence", route: "/app/vriddhi-capital?focus=notification_logs" });
-		}
-		if (focusRoutes[item.route]) return Object.assign({}, item, { route: focusRoutes[item.route] });
-		return item;
-	};
-	Object.values(metadata.views || {}).forEach((view) => {
-		view.shortcuts = (view.shortcuts || []).map(cleanItem);
-		(view.groups || []).forEach((group) => {
-			group.items = (group.items || []).map(cleanItem);
-		});
-	});
 	return metadata;
 }
 
@@ -986,8 +953,8 @@ function bind_actions(page) {
 	body.on("click", "[data-remind]", (event) => send_invoice_reminder(page, $(event.currentTarget).attr("data-remind")));
 	body.on("click", ".vriddhi-card", (event) => {
 		const source = $(event.currentTarget).attr("data-source");
-		const focus = VRIDDHI_CARD_FOCUS[source];
-		if (focus) focus_dashboard_target(page, focus);
+		const route = VRIDDHI_CARD_ROUTES[source];
+		if (route) window.location.assign(route);
 	});
 	body.on("click", 'a[href="#ledger-export"]', (event) => {
 		event.preventDefault();
