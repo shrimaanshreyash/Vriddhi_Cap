@@ -128,16 +128,17 @@ def get_invoice_pdf(invoice):
 	if isinstance(invoice, str):
 		invoice = frappe.get_doc("Sales Invoice", invoice)
 
-	for print_format in ("GST Tax Invoice", "Standard"):
+	for print_format in ("Standard", None):
 		try:
-			return frappe.attach_print(
-				invoice.doctype,
-				invoice.name,
-				print_format=print_format,
-				file_name=f"{invoice.name}.pdf",
-				print_letterhead=False,
-			)
+			kwargs = {
+				"file_name": f"{invoice.name}.pdf",
+				"print_letterhead": False,
+			}
+			if print_format:
+				kwargs["print_format"] = print_format
+			return frappe.attach_print(invoice.doctype, invoice.name, **kwargs)
 		except Exception:
+			frappe.local.message_log = []
 			continue
 	return frappe.attach_print(invoice.doctype, invoice.name, file_name=f"{invoice.name}.pdf", print_letterhead=False)
 
