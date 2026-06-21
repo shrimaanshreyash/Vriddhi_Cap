@@ -1192,7 +1192,7 @@ function route_slug(doctype) {
 function invoice_action_cell(invoiceName) {
 	const encoded = encodeURIComponent(invoiceName);
 	return `<td class="vriddhi-row-actions">
-		<a class="btn btn-xs btn-default" href="/api/method/frappe.utils.print_format.download_pdf?doctype=Sales%20Invoice&name=${encoded}&format=Standard&no_letterhead=1" target="_blank">PDF</a>
+		<a class="btn btn-xs btn-default" href="/api/method/vriddhi_capital.notifications.download_invoice_pdf?invoice_name=${encoded}" target="_blank">PDF</a>
 		<button class="btn btn-xs btn-default" data-remind="${escape_html(invoiceName)}">Remind</button>
 	</td>`;
 }

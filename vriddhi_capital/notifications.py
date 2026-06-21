@@ -48,6 +48,15 @@ def send_payment_reminder(invoice_name):
 	return send_invoice_notification(invoice, "Payment Reminder")
 
 
+@frappe.whitelist()
+def download_invoice_pdf(invoice_name):
+	invoice = frappe.get_doc("Sales Invoice", invoice_name)
+	pdf = get_invoice_pdf(invoice)
+	frappe.local.response.filename = pdf.get("fname") or f"{invoice.name}.pdf"
+	frappe.local.response.filecontent = pdf.get("fcontent")
+	frappe.local.response.type = "pdf"
+
+
 def send_overdue_reminders():
 	settings = get_settings()
 	reminder_days = [cint(day.strip()) for day in (settings.get("reminder_days") or "0,3,7,15").split(",") if day.strip()]
@@ -116,12 +125,21 @@ def send_invoice_notification(invoice, event_type):
 
 
 def get_invoice_pdf(invoice):
+	if isinstance(invoice, str):
+		invoice = frappe.get_doc("Sales Invoice", invoice)
+
 	for print_format in ("GST Tax Invoice", "Standard"):
 		try:
-			return frappe.attach_print(invoice.doctype, invoice.name, print_format=print_format, file_name=f"{invoice.name}.pdf")
+			return frappe.attach_print(
+				invoice.doctype,
+				invoice.name,
+				print_format=print_format,
+				file_name=f"{invoice.name}.pdf",
+				print_letterhead=False,
+			)
 		except Exception:
 			continue
-	return frappe.attach_print(invoice.doctype, invoice.name, file_name=f"{invoice.name}.pdf")
+	return frappe.attach_print(invoice.doctype, invoice.name, file_name=f"{invoice.name}.pdf", print_letterhead=False)
 
 
 def send_telegram_document(token, chat_id, content, filename, caption):
